@@ -1,0 +1,14 @@
+RPS - Multiplayer Notes
+
+* Dashboard style
+
+* Left sidebar displays player stock img, player name, win & loss count
+
+* Main container displays 2 rows:
+   1) 3 main containers
+	- Left: 2 phases (Player name + move options (r,p,s)), then move options are replaced with move chosen
+	- Middle: battle winner (name)
+	- Right: same as left, but with other player
+
+  2) 1 container
+  	- Chat window

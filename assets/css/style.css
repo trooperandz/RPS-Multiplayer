@@ -1,0 +1,117 @@
+/* Apply dark navy blue background and gray text to body */
+body {
+	background-color: #2f4050;
+	color: #9d9d9d;
+}
+
+/* Center-align specific elements */
+.text-center {
+	text-align: center;
+}
+
+/* Main program title in top left of screen */
+a.navbar-brand {
+	font-weight: 200;
+	font-size: 20px;
+}
+
+/* Dark gray background for sidebar */
+div.sidebar {
+	background-color: #333;
+}
+
+.nav>li>a.sidebar-heading {
+	padding-top: 0;
+	padding-bottom: 30px;
+	color: orange;
+	font-weight: 200;
+}
+
+/* Remove white background on li hover event */
+.nav>li>a:hover {
+	background: none;
+}
+
+/* Give the button generator input field label better styling */
+label {
+	color: #9d9d9d;
+	font-weight: 200;
+	font-size: 18px;
+}
+
+/* Put the buttons in the middle of the sidebar */
+li {
+	text-align: center;
+}
+
+/* Make sure the img fits appropriately into sidebar */
+.sidebar img {
+	width: 94%;
+}
+
+.sidebar h2 {
+	padding: 0px 10px;
+	border-bottom: 1px solid gray;
+	margin: 2px 20px;
+	font-weight: 200;
+}
+
+/* Move input field left to make room away from edge of screen */
+input.input-generate {
+	margin-right: 5px;
+}
+
+/* Move main game container content down to about middle of page */
+div#game-content {
+	margin-top: 15%;
+}
+
+/* Styling for all side buttons */
+.btn {
+	border-radius: 3px;
+}
+
+/* Make search icon light blue */
+.glyphicon-search {
+	color: #337ab7;
+}
+
+/* Align search icon inside of input field */
+span.search-icon {
+	margin-top: 8px;
+	padding-right: 40px;
+}
+
+/* Make sure that search icon has pointer on hover event */
+span.form-control-feedback {
+	pointer-events: visible;
+	cursor: pointer;
+}
+
+/* Give main page heading (will contain most recent search term) a ligher weight for aesthetics */
+h1 {
+	text-align: center;
+	font-weight: 200;
+}
+
+h1.page-header {
+	border-bottom: .5px solid gray;
+	margin-bottom: 5px;
+}
+
+div#icon-single img {
+	width: 40%;
+	height: auto;
+}
+
+div#icon-double img {
+	width: 40%;
+	height: auto;
+}
+
+/* Only add sidebar border on larger screens */
+@media (min-width: 768px) {
+	.sidebar {
+		border-right: 1px solid gray;
+	}
+}
