@@ -44,9 +44,13 @@ li {
 	text-align: center;
 }
 
+.sidebar li {
+	margin-bottom: 50px;
+}
+
 /* Make sure the img fits appropriately into sidebar */
 .sidebar img {
-	width: 94%;
+	width: 80%;
 }
 
 .sidebar h2 {
@@ -63,7 +67,7 @@ input.input-generate {
 
 /* Move main game container content down to about middle of page */
 div#game-content {
-	margin-top: 15%;
+	margin-top: 10%;
 }
 
 /* Styling for all side buttons */
@@ -99,6 +103,23 @@ h1.page-header {
 	margin-bottom: 5px;
 }
 
+div#player-content h2 {
+	font-weight: 200;
+	margin-bottom: 20px;
+}
+
+div#game-content img {
+	cursor: pointer;
+	padding: 2px;
+	border-radius: 30%;
+	transition: .5s;
+}
+
+div#game-content img:hover {
+	border-radius: 50%;
+	background-color: #fff;
+}
+
 div#icon-single img {
 	width: 40%;
 	height: auto;
@@ -107,6 +128,49 @@ div#icon-single img {
 div#icon-double img {
 	width: 40%;
 	height: auto;
+}
+
+/* Apply margin to double-image container, so that spacing between all circular game icons is equal */
+img#img-1 {
+	margin-right: 8px;
+}
+
+img#img-2 {
+	margin-left: 8px;
+}
+
+/* Make play choice icon large enough to fill most of container after player chooses R,P, or S */
+div#answer-reveal img{
+	width: 80%;
+}
+
+
+/* Make player name heading orange if player is active */
+h2.player-active {
+	color: orange;
+}
+
+/* Styling for active player container - applied for player whose turn it is */
+div.player-active {
+	border: 2px solid;
+    border-radius: 2%;
+    background-color: rgba(204,204,204,0.2);
+}
+
+div#result-content h2 {
+	font-weight: 200;
+	margin-bottom: 20px;
+}
+
+div#result-content p {
+	padding: 30% 20%;
+	width: 100%;
+	background-color: #4aaaa5;
+	border: 5px solid gray;
+	border-radius: 7px;
+	font-size: 3em;
+	color: #fff;
+	box-shadow: 7px 7px 9px #323232;
 }
 
 /* Only add sidebar border on larger screens */

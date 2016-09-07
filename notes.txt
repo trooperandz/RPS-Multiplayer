@@ -12,3 +12,47 @@ RPS - Multiplayer Notes
 
   2) 1 container
   	- Chat window
+
+ * Container structures
+
+ 	- Markup for player choice content (before move has been selected - show all possible move icons):
+ 		* Note: "player-active" class for <h2> will make the color orange; for "play-icons" <div>, it will give a background and border to content
+
+ 		<div class="col-sm-12 col-md-4 col-lg-4 text-center" id="player-content">
+    		<div class="row">
+    			<div class="col-sm-12 col-md-12 col-lg-12">
+    				<h2 class="player-active"> Matthew </h2>
+    			</div>
+    		</div>
+    		<div class="play-icons player-active">
+    			<div class="row">
+    				<div class="col-sm-12 col-md-12 col-lg-12" id="icon-single">
+    					<img src="assets/img/rock.png">
+    				</div>
+    			</div>
+    			<div class="row">
+    				<div class="col-sm-12 col-md-12 col-lg-12" id="icon-double">
+    					<img src="assets/img/paper.png" id="img-1">
+    					<img src="assets/img/scissors.png" id="img-2">
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+
+    - Markup for content of player's move choice (after move has been selected - only show icon of move chosen):
+    	* Note: Content differs from above only inside of the "play-icons" <div>
+
+    	<div class="col-sm-12 col-md-4 col-lg-4 text-center" id="player-content">
+        	<div class="row">
+               	<div class="col-sm-12 col-md-12 col-lg-12">
+        			<h2> Sarah </h2>
+        		</div>
+        	</div>
+        	<div class="play-icons">
+        		<div class="row">
+        			<div class="col-sm-12 col-md-12 col-lg-12" id="answer-reveal">
+        				<img src="assets/img/rock.png">
+        			</div>
+        		</div>
+        	</div>
+        </div>

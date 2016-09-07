@@ -67,29 +67,31 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Main sidebar content, for housing topic buttons -->
-            <div class="col-sm-3 col-md-2 sidebar">
+            <div class="col-sm-3 col-md-2 sidebar text-center">
                 <ul class="nav nav-sidebar">
                     <li><a href="#" class="sidebar-heading">Player Dashboard</a></li>
                     <!-- div container for player info (score etc) -->
                     <div id="player-area">
                     	<li>
-                    		<img src="assets/img/player-icon.png" alt="Player Image">
+                    		
                     		<h2> Matthew </h2>
                     		<p> 
                     			Wins: <span id="win-count"> 0 </span> 
                     			&nbsp; 
                     			Losses: <span id="loss-count"> 2 </span> 
                     		</p>
+                    		<img src="assets/img/player-icon.png" alt="Player Image">
                     	</li>
 
                     	<li>
-                    		<img src="assets/img/player-icon.png" alt="Player Image">
+                    		
                     		<h2> Sarah </h2>
                     		<p> 
                     			Wins: <span id="win-count"> 0 </span> 
                     			&nbsp; 
                     			Losses: <span id="loss-count"> 2 </span> 
                     		</p>
+                    		<img src="assets/img/player-icon.png" alt="Player Image">
                     	</li>
                     </div>
                 </ul>
@@ -99,40 +101,62 @@
                 <h1 class="page-header"> Choose Your Move Wisely... <span class="header-span"></span></h1>
                 <!-- <h5>Some Info</h5> -->
                 <div class="row" id="game-content">
+                	<!-- Make R,P,S choice icons look like an evenly-spaced circular layout -->
+                	<div class="col-sm-12 col-md-4 col-lg-4 text-center" id="player-content">
+                		<div class="row">
+                			<div class="col-sm-12 col-md-12 col-lg-12">
+                				<h2 class="player-active"> Matthew </h2>
+                			</div>
+                		</div>
+                		<div class="play-icons player-active">
+                			<div class="row">
+                				<div class="col-sm-12 col-md-12 col-lg-12" id="icon-single">
+                					<img src="assets/img/rock.png">
+                				</div>
+                			</div>
+                			<div class="row">
+                				<div class="col-sm-12 col-md-12 col-lg-12" id="icon-double">
+                					<img src="assets/img/paper.png" id="img-1">
+                					<img src="assets/img/scissors.png" id="img-2">
+                				</div>
+                			</div>
+                		</div>
+                	</div>
+
+                	<div class="col-sm-12 col-md-4 col-lg-4 text-center" id="result-content">
+                		<div class="row">
+                			<div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                				<h2> Battle Area </h2>
+                			</div>
+                		</div>
+                		<div class="row">
+                			<div class="col-sm-12 col-md-12 col-lg-12 text-center">
+                				<p> Waiting... </p>
+                			</div>
+                		</div>
+                	</div>
+
                 	<!-- Make R,P,S choices look like a circle layout -->
                 	<div class="col-sm-12 col-md-4 col-lg-4 text-center" id="player-content">
                 		<div class="row">
-                			<div class="col-sm-12 col-md-12 col-lg-12" id="icon-single">
-                				<img src="assets/img/rock.png">
+                			<div class="col-sm-12 col-md-12 col-lg-12">
+                				<h2> Sarah </h2>
                 			</div>
                 		</div>
-                		<div class="row">
-                			<div class="col-sm-12 col-md-12 col-lg-12" id="icon-double">
-                				<img src="assets/img/paper.png">
-                				<img src="assets/img/scissors.png">
+                		<div class="play-icons">
+                			<div class="row">
+                				<div class="col-sm-12 col-md-12 col-lg-12" id="icon-single">
+                					<img src="assets/img/rock.png">
+                				</div>
                 			</div>
-                		</div>
-                	</div>
-
-                	<div class="col-sm-12 col-md-4 col-lg-4" id="result-content">
-                		<p> Waiting... </p>
-                	</div>
-
-                	<!-- Make R,P,S choices look like a circle layout -->
-                	<div class="col-sm-12 col-md-4 col-lg-4 text-center" id="player-content">
-                		<div class="row">
-                			<div class="col-sm-12 col-md-12 col-lg-12" id="icon-single">
-                				<img src="assets/img/rock.png">
-                			</div>
-                		</div>
-                		<div class="row">
-                			<div class="col-sm-12 col-md-12 col-lg-12" id="icon-double">
-                				<img src="assets/img/paper.png">
-                				<img src="assets/img/scissors.png">
+                			<div class="row">
+                				<div class="col-sm-12 col-md-12 col-lg-12" id="icon-double">
+                					<img src="assets/img/paper.png" id="img-1">
+                					<img src="assets/img/scissors.png" id="img-2">
+                				</div>
                 			</div>
                 		</div>
                 	</div>
-
                 </div>
             </div> <!-- /.main -->
         </div> <!-- /.row -->
