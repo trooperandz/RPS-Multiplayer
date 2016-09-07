@@ -61,7 +61,7 @@ li {
 }
 
 /* Move input field left to make room away from edge of screen */
-input.input-generate {
+input.player-join-input {
 	margin-right: 5px;
 }
 
@@ -76,12 +76,12 @@ div#game-content {
 }
 
 /* Make search icon light blue */
-.glyphicon-search {
+.glyphicon-plus {
 	color: #337ab7;
 }
 
 /* Align search icon inside of input field */
-span.search-icon {
+span.plus-icon {
 	margin-top: 8px;
 	padding-right: 40px;
 }
@@ -131,11 +131,11 @@ div#icon-double img {
 }
 
 /* Apply margin to double-image container, so that spacing between all circular game icons is equal */
-img#img-1 {
+img.img-1 {
 	margin-right: 8px;
 }
 
-img#img-2 {
+img.img-2 {
 	margin-left: 8px;
 }
 

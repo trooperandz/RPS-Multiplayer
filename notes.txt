@@ -13,7 +13,7 @@ RPS - Multiplayer Notes
   2) 1 container
   	- Chat window
 
- * Container structures
+* Container structures
 
  	- Markup for player choice content (before move has been selected - show all possible move icons):
  		* Note: "player-active" class for <h2> will make the color orange; for "play-icons" <div>, it will give a background and border to content
@@ -56,3 +56,61 @@ RPS - Multiplayer Notes
         		</div>
         	</div>
         </div>
+
+    - Markup for game status (middle content) - for display of 'Thinking...' and Winner is.... text
+
+    	<div class="col-sm-12 col-md-4 col-lg-4 text-center" id="result-content">
+        	<div class="row">
+        		<div class="col-sm-12 col-md-12 col-lg-12 text-center">
+        			<h2> Battle Area </h2>
+        		</div>
+        	</div>
+        	<div class="row">
+        		<div class="col-sm-12 col-md-12 col-lg-12 text-center">
+        			<p> Waiting... </p>
+        		</div>
+        	</div>
+        </div>
+
+* Database notes
+
+	Connection credentials: 
+
+		<script src="https://www.gstatic.com/firebasejs/3.3.1/firebase.js"></script>
+		<script>
+		  // Initialize Firebase
+		  var config = {
+		    apiKey: "AIzaSyB_M3jo8D8_tTkrgMiEpCzoe_k_hYCucT0",
+		    authDomain: "multi-rps-74cdc.firebaseapp.com",
+		    databaseURL: "https://multi-rps-74cdc.firebaseio.com",
+		    storageBucket: "",
+		  };
+		  firebase.initializeApp(config);
+		</script>
+    
+	
+	DB name: multi-rps
+
+	Main object: players
+		Indexes for players: 
+			-1
+			-2
+		
+		DB fields (included inside of each player index):
+			-name
+			-choice
+			-wins
+			-losses
+
+	Turn object: turn (count for turn number)
+
+	DB Insertion Notes:
+		- When a player enters their name, a node is generated (with player number, and within that is "name", "wins: 0", "losses: 0")
+
+		- When a player makes a move selection, the following is updated: 
+			* The player's move choice (as a string, i.e. "rock"), and the turn is incremented
+			* Note: if first move of current round, the win/loss is not updated
+			* As soon as final player goes, the following is updated: 2nd player choice string, win/loss for each player
+
+		
+
