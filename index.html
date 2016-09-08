@@ -54,7 +54,7 @@
             <div id="navbar" class="navbar-collapse collapse">
                 <div class="navbar-form navbar-right">
                     <button class="btn btn-primary clear-btn">Leave Game</button>
-                    <label> Enter Your Name </label>
+                    <label> Join Game </label>
                     <!-- Input field for new topic button generation -->
                     <input type="text" class="form-control input-generate player-join-input" placeholder="Enter your name...">
                     <!-- Search icon, registers click for new topic button generation, or via onkeyup Enter kay -->
@@ -73,23 +73,23 @@
                     <!-- div container for player info (score etc) -->
                     <div id="player-area">
                     	<li>
-                    		
-                    		<h2> Matthew </h2>
+         					<!-- <h2> will be updated with player name when player joins game -->
+                    		<h2 id="player1-side-h"> Player 1 </h2>
                     		<p> 
                     			Wins: <span id="win-count"> 0 </span> 
                     			&nbsp; 
-                    			Losses: <span id="loss-count"> 2 </span> 
+                    			Losses: <span id="loss-count"> 0 </span> 
                     		</p>
                     		<img src="assets/img/player-icon.png" alt="Player Image">
                     	</li>
 
                     	<li>
-                    		
-                    		<h2> Sarah </h2>
+                    		<!-- <h2> will be updated with player name when player joins game -->
+                    		<h2 id="player2-side-h"> Player 2 </h2>
                     		<p> 
                     			Wins: <span id="win-count"> 0 </span> 
                     			&nbsp; 
-                    			Losses: <span id="loss-count"> 2 </span> 
+                    			Losses: <span id="loss-count"> 0 </span> 
                     		</p>
                     		<img src="assets/img/player-icon.png" alt="Player Image">
                     	</li>
@@ -105,11 +105,14 @@
                 	<div class="col-sm-12 col-md-4 col-lg-4 text-center" id="player-content">
                 		<div class="row">
                 			<div class="col-sm-12 col-md-12 col-lg-12">
-                				<h2 class="player-active" id="playerName1"> Matthew </h2>
+                				<!--<h2 class="player-active" id="player1Name"> Player 1 </h2>-->
+                				<h2 id="player1Name"> Player 1 </h2>
                 			</div>
                 		</div>
                 		<!-- Note: id "player1" used to target db player reference. <img> id's used to identify move type -->
-                		<div class="play-icons player-active" id="player1">
+                		<!--<div class="play-icons player-active" id="player1MoveContent">-->
+                		<!-- Note: don't change below id, as last number is used to reference player number via .slice() -->
+                		<div class="play-icons" id="player1">
                 			<div class="row">
                 				<div class="col-sm-12 col-md-12 col-lg-12" id="icon-single">
                 					<img src="assets/img/rock.png" id="rock">
@@ -141,10 +144,11 @@
                 	<div class="col-sm-12 col-md-4 col-lg-4 text-center" id="player-content">
                 		<div class="row">
                 			<div class="col-sm-12 col-md-12 col-lg-12">
-                				<h2 id="playerName2"> Sarah </h2>
+                				<h2 id="player2Name"> Player 2 </h2>
                 			</div>
                 		</div>
                 		<!-- Note: id "player2" used to target db player reference. <img> id's used to identify move type -->
+                		<!-- Note: don't change below id, as last number is used to reference player number via .slice() -->
                 		<div class="play-icons" id="player2">
                 			<div class="row">
                 				<div class="col-sm-12 col-md-12 col-lg-12" id="icon-single">
