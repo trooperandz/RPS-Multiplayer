@@ -13,6 +13,9 @@ firebase.initializeApp(config);
 // Create db var for easy access
 var db = firebase.database();
 
+// Set var to cancel db update code (update status if you will)
+var cancelSnapshotAction = false;
+
 // Set global turnCount for tracking turn number (dictates which person's turn it is)
 var turnCount = 0;
 
@@ -34,7 +37,8 @@ db.ref().on("value", function(snapshot) {
 	console.log("snapshot: " , snapshot.val());
 
 	// Update the turnCount with the value in the database
-	if(snapshot.child("turn").exists()) {
+	// Note: if cancelSnapshotAction == true, do not run below code
+	if(snapshot.child("turn").exists() && !cancelSnapshotAction) {
 		turnCount = snapshot.val().turn;
 		console.log("turnCount snapshot value: " + turnCount);
 
@@ -67,7 +71,7 @@ db.ref().on("value", function(snapshot) {
 			var imgUrl1 = snapshot.val().players["1"].imgUrl;
 			//console.log("Player 1 snapshot img test turnCount 3: " + imgUrl1);
 
-			// var choiceTest = snapshot.val().players["1"].choice;
+			 var player1Choice = snapshot.val().players["1"].choice;
 			// console.log("Player 1 snapshot choice test turnCount 3: " + choiceTest);
 			var content = '<div class="row">' +
         					'<div class="col-sm-12 col-md-12 col-lg-12" id="answer-reveal">' +
@@ -79,7 +83,7 @@ db.ref().on("value", function(snapshot) {
 			var imgUrl2 = snapshot.val().players["2"].imgUrl;
 			//console.log("Player 2 snapshot img test turnCount 3: " + imgUrl2);
 
-			// var choiceTest = snapshot.val().players["2"].choice;
+			 var player2Choice = snapshot.val().players["2"].choice;
 			// console.log("Player 2 snapshot choice test turnCount 3: " + choiceTest);
 			var content = '<div class="row">' +
         					'<div class="col-sm-12 col-md-12 col-lg-12" id="answer-reveal">' +
@@ -87,6 +91,9 @@ db.ref().on("value", function(snapshot) {
         					'</div>' +
         				  '</div>';
 			$('div#player2').html(content);
+
+			// Determine who won
+			game.getBattleOutcome(player1Choice, player2Choice);
 			//$('#player1Name').addClass(activeClassName);
 			//$('#player1').addClass(activeClassName);
 			// Reset turnCount to 1 in db
@@ -94,18 +101,27 @@ db.ref().on("value", function(snapshot) {
 		}
 	}
 
+	// Update player names and win/loss count on every call for ease of shiz niz
 	if(snapshot.child("players").child("1").exists()) {
 		player1Name = snapshot.val().players["1"].name;
 		//console.log("player1Name inside of exists check: " + player1Name);
 		// Update side content and main content player name
-		$('#player1-side-h').html(player1Name);
+		$('.player1-side-h').html(player1Name);
 		$('#player1Name').html(player1Name);
+
+		// Update player win/loss stats.  Note: getBattleResults in snapshot sets globals for you
+		document.getElementById("player1-win-count").innerHTML = player1Wins;
+		document.getElementById("player1-loss-count").innerHTML = player1Losses;
 	}
 	if(snapshot.child("players").child("2").exists()) {
 		player2Name = snapshot.val().players["2"].name;
 		// Update side content and main content player name
-		$('#player2-side-h').html(player2Name);
+		$('.player2-side-h').html(player2Name);
 		$('#player2Name').html(player2Name);
+
+		// Update player win/loss stats. Note: getBattleResults in snapshot sets globals for you
+		document.getElementById("player2-win-count").innerHTML = player2Wins;
+		document.getElementById("player2-loss-count").innerHTML = player2Losses;
 	}
 
 // If any errors are experienced, log them to console. 
@@ -154,6 +170,114 @@ var game = {
 	 */
 	createCurrMoveChoice: function() {
 
+	},
+
+	/**
+	 * Determine game player outcome (who won), update player win/loss count in db
+	 * @param {string} player1Choice, player2Choice The selection the player made
+	 * @return N/A
+	 * Note: gameResult true == player 1 won; false == player 2 won, null == tie.
+	 * Return value will be used for updating page content (wins,losses)
+	 * Updates to global vars player1Wins, player1Losses, player2Wins, player2Losses occurr in code
+	 */
+	getBattleOutcome: function(player1Choice, player2Choice) {
+
+		// Establish & assign boolean values to winner vars for easy readability
+		var player1 = true;
+		var player2 = false;
+
+		// Initialize return var
+		var gameResult = "";
+
+		// Use switch statements for better readability
+		if (player1Choice == "rock") {
+			switch (player2Choice) {
+    			case "paper":
+    	    		gameResult = player2;
+    	    		player2Wins++;
+    	    		player1Losses++;
+    	    		break;
+    			case "scissors":
+    	    		gameResult = player1;
+    	    		player1Wins++;
+    	    		player2Losses++;
+    	    		break;
+    			default:
+    	    		gameResult = "tie";
+    	    }
+		} else if (player1Choice == "paper") {
+			switch (player2Choice) {
+				case "rock":
+					gameResult = player1;
+					player1Wins++;
+					player2Losses++;
+					break;
+				case "scissors":
+					gameResult = player2;
+					player2Wins++;
+					player1Losses++;
+					break;
+				default:
+					gameResult = "tie";
+			}
+		} else if (player1Choice == "scissors") {
+			switch (player2Choice) {
+				case "rock":
+					gameResult = player2;
+					player2Wins++;
+					player1Losses++;
+					break;
+				case "paper":
+					gameResult = player1;
+					player1Wins++;
+					player2Losses++;
+					break;
+				default:
+					gameResult = "tie";
+			}
+		}
+
+		// Set db snapshot action instruction (true will disable gameplay code content updates & changes which only need to happen during game play)
+		cancelSnapshotAction = true;
+
+		// Depending on who won/loss, update game status and set win message for middle content area
+		var winMsg = "";
+
+		if (gameResult == "tie") {
+			console.log("Tied game!");
+			winMsg = "'Twas a tie!";
+
+		} else if (gameResult) {
+			console.log("Player 1 won!");
+			// Player 1 won. Update player 1 win and player 2 loss count in db
+			db.ref().child("players").child("1").update({
+				wins: player1Wins
+			})
+			db.ref().child("players").child("2").update({
+				losses: player2Losses
+			})
+
+			winMsg = "Player 1 won!";
+
+		} else if (!gameResult) {
+			console.log("Player 2 won!");
+			// Player 2 won
+			db.ref().child("players").child("2").update({
+				wins: player2Wins
+			})
+			db.ref().child("players").child("1").update({
+				losses: player1Losses
+			})
+
+			winMsg = "Player 2 won!";
+
+		}
+
+		// Update middle content area with winner message
+		$('#round-feedback').html(winMsg);
+
+		// Reset snapshot action var back to default false so that normal gameplay actions may resume
+		cancelSnapshotAction = false;
 	},
 
 	/**

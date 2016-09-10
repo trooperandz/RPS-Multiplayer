@@ -74,22 +74,22 @@
                     <div id="player-area">
                     	<li>
          					<!-- <h2> will be updated with player name when player joins game -->
-                    		<h2 id="player1-side-h"> Player 1 </h2>
+                    		<h2 class="player1-side-h"> Player 1 </h2>
                     		<p> 
-                    			Wins: <span id="win-count"> 0 </span> 
+                    			Wins: <span id="player1-win-count"> 0 </span> 
                     			&nbsp; 
-                    			Losses: <span id="loss-count"> 0 </span> 
+                    			Losses: <span id="player1-loss-count"> 0 </span> 
                     		</p>
                     		<img src="assets/img/player-icon.png" alt="Player Image">
                     	</li>
 
                     	<li>
                     		<!-- <h2> will be updated with player name when player joins game -->
-                    		<h2 id="player2-side-h"> Player 2 </h2>
+                    		<h2 class="player2-side-h"> Player 2 </h2>
                     		<p> 
-                    			Wins: <span id="win-count"> 0 </span> 
+                    			Wins: <span id="player2-win-count"> 0 </span> 
                     			&nbsp; 
-                    			Losses: <span id="loss-count"> 0 </span> 
+                    			Losses: <span id="player2-loss-count"> 0 </span> 
                     		</p>
                     		<img src="assets/img/player-icon.png" alt="Player Image">
                     	</li>
@@ -135,7 +135,7 @@
                 		</div>
                 		<div class="row">
                 			<div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                				<p> Waiting... </p>
+                				<p id="round-feedback" data-text="Waiting..."> Waiting... </p>
                 			</div>
                 		</div>
                 	</div>
