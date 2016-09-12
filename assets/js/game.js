@@ -123,7 +123,7 @@ db.ref().on("value", function(snapshot) {
 	if (snapshot.val() == null) {
 		// Erase db data, restore main name headings in gameplay and sidebar area, and set all scores back to zero
 		game.resetGame();
-		
+
 		// Remove active class from player 1 area
 		var elementArray = [ $('#player1Name'), $('#player1') ];
 		game.removeActiveClass(elementArray);
@@ -534,9 +534,6 @@ $(document).ready(function() {
 	});
 
 	// Click handler for reset game button, to erase db data and restore game defaults
-	// 1) Erase db info, set cancelSpanshotAction == true
-	// 2) Run resetPlayContent method to restore all player choice options on the screen
-	// 3) 
 	$('#reset-btn').on('click', function() {
 		db.ref().remove();
 	});

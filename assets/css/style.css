@@ -45,7 +45,7 @@ li {
 }
 
 .sidebar li {
-	margin-bottom: 50px;
+	margin-bottom: 20px;
 }
 
 /* Make sure the img fits appropriately into sidebar */
@@ -58,6 +58,18 @@ li {
 	border-bottom: 1px solid gray;
 	margin: 2px 20px;
 	font-weight: 200;
+}
+
+.leave-btn {
+	margin-bottom: 15px;
+	background: none;
+	border: 1px solid #4aaaaa;
+	color: royalblue;
+	transition: .5s;
+}
+
+.leave-btn:hover {
+	background: #4aaaaa;
 }
 
 /* Move input field left to make room away from edge of screen */
