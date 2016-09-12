@@ -120,6 +120,11 @@ div#game-content img:hover {
 	background-color: #fff;
 }
 
+/* If img displayed is player's selected choice, apply no bg hover color */
+img.no-hover-bg:hover {
+	background: none;
+}
+
 div#icon-single img {
 	width: 40%;
 	height: auto;

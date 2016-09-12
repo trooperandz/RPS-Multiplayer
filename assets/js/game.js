@@ -36,8 +36,7 @@ var activeClassName = "player-active";
 db.ref().on("value", function(snapshot) {
 	console.log("snapshot: " , snapshot.val());
 
-	// Update the turnCount with the value in the database
-	// Note: if cancelSnapshotAction == true, do not run below code
+	// Update the turnCount with the value in the database. Note: if cancelSnapshotAction == true, do not run below code
 	if(snapshot.child("turn").exists() && !cancelSnapshotAction) {
 		turnCount = snapshot.val().turn;
 		console.log("turnCount snapshot value: " + turnCount);
@@ -45,18 +44,21 @@ db.ref().on("value", function(snapshot) {
 		// If turnCount == 1 (player 1's turn), add active class to content for styling
 		if(turnCount == 0 || turnCount == 1) {
 			// If both players' names have been entered, and player one hasn't moved yet, highlight player 1 content area and heading
-			$('#player1Name').addClass(activeClassName);
-			$('#player1').addClass(activeClassName);
+			var elementArray = [ $('#player1Name'), $('#player1') ];
+			game.addActiveClass(elementArray);
+
 			// var test1 = snapshot.val().players["1"].name;
 			// console.log("Player 1 snapshot name test turnCount 1: " + test1);
 			// var test2 = snapshot.val().players["2"].name;
 			// console.log("Player 2 snapshot name test turnCount 1: " + test2);
 		} else if (turnCount == 2) {
 			// If player one already moved, highlight player 2 content area and heading. First, remove class from player 1
-			$('#player1Name').removeClass(activeClassName);
-			$('#player1').removeClass(activeClassName);
-			$('#player2Name').addClass(activeClassName);
-			$('#player2').addClass(activeClassName);
+			var elementArray = [ $('#player1Name'), $('#player1') ];
+			game.removeActiveClass(elementArray);
+
+			var elementArray = [ $('#player2Name'), $('#player2') ];
+			game.addActiveClass(elementArray);
+
 			// Test player 1 data
 			// var imgTest1 = snapshot.val().players["1"].imgUrl;
 			// console.log("Player 1 snapshot img test turnCount 2: " + imgTest1);
@@ -64,8 +66,8 @@ db.ref().on("value", function(snapshot) {
 			// console.log("Player 2 snapshot name test turnCount 2: " + nameTest2);
 		} else if (turnCount > 2) {
 			// Remove active class from player 2 content
-			$('#player2Name').removeClass(activeClassName);
-			$('#player2').removeClass(activeClassName);
+			var elementArray = [ $('#player2Name'), $('#player2')];
+			game.removeActiveClass(elementArray);
 
 			// Show move choices on both screens now that both players have chosen a move
 			var imgUrl1 = snapshot.val().players["1"].imgUrl;
@@ -73,31 +75,21 @@ db.ref().on("value", function(snapshot) {
 
 			 var player1Choice = snapshot.val().players["1"].choice;
 			// console.log("Player 1 snapshot choice test turnCount 3: " + choiceTest);
-			var content = '<div class="row">' +
-        					'<div class="col-sm-12 col-md-12 col-lg-12" id="answer-reveal">' +
-        						'<img src="' + imgUrl1 + '">' +
-        					'</div>' +
-        				  '</div>';
-			$('div#player1').html(content);
+
+			// Replace choice content with player-selected move
+			game.showMoveSelected(imgUrl1, $('#player1'));
 
 			var imgUrl2 = snapshot.val().players["2"].imgUrl;
 			//console.log("Player 2 snapshot img test turnCount 3: " + imgUrl2);
 
-			 var player2Choice = snapshot.val().players["2"].choice;
+			var player2Choice = snapshot.val().players["2"].choice;
 			// console.log("Player 2 snapshot choice test turnCount 3: " + choiceTest);
-			var content = '<div class="row">' +
-        					'<div class="col-sm-12 col-md-12 col-lg-12" id="answer-reveal">' +
-        						'<img src="' + imgUrl2 + '">' +
-        					'</div>' +
-        				  '</div>';
-			$('div#player2').html(content);
 
-			// Determine who won
+			// Replace choice content with player-selected move
+			game.showMoveSelected(imgUrl2, $('#player2'));
+
+			// Determine who won, display middle feedback msg, and then reset answer choice and middle feedback content to default
 			game.getBattleOutcome(player1Choice, player2Choice);
-			//$('#player1Name').addClass(activeClassName);
-			//$('#player1').addClass(activeClassName);
-			// Reset turnCount to 1 in db
-			//db.ref().child("turn").set(1);
 		}
 	}
 
@@ -132,44 +124,79 @@ db.ref().on("value", function(snapshot) {
 // Main game object for play functionality
 var game = {
 
-	// Establish vars for storing player move choice img url, for later answer choice content generation
-	playerImg1: "",
-	playerImg2: "",
+	// Set img src strings as vars for DRY adherence in case location changes etc.
+	rockImgSrc: "assets/img/rock.png",
+	paperImgSrc: "assets/img/paper.png",
+	scissorsImgSrc: "assets/img/scissors.png",
 
 	/**
 	 * Generate html content for player move selection choices display
 	 * @param N/A
 	 * @return N/A
 	 */
-	createMoveChoices: function() {
+	showMoveChoices: function() {
+		// Build move choice html content
+		var content =
+		'<div class="row">' +
+        	'<div class="col-sm-12 col-md-12 col-lg-12" id="icon-single">' +
+        		'<img src="' + this.rockImgSrc + '" id="rock">' +
+        	'</div>' +
+        '</div>' +
+        '<div class="row">' +
+        	'<div class="col-sm-12 col-md-12 col-lg-12" id="icon-double">' +
+        		'<img src="' + this.paperImgSrc + '" class="img-1" id="paper">' +
+        		'<img src="' + this.scissorsImgSrc + '" class="img-2" id="scissors">' +
+        	'</div>' +
+        '</div>';
 
+        // Replace #player1 & #player2 div content with updated content
+        $('#player1').html(content);
+        $('#player2').html(content);
+
+        // Add active class to player1 content
+        var elementArray = [ $('#player1Name'), $('#player1') ];
+		game.addActiveClass(elementArray);
 	},
 
 	/**
-	 * Apply player-active class to current player display content, for signaling to players who's turn it is
-	 * @param N/A
+	 * Apply player-active class to current player display content and name heading, for signaling to players who's turn it is
+	 * @param {array} elementArray Array of html dom objects
 	 * @return N/A
 	 */
-	applyActiveClass: function(htmlObj) {
-		htmlObj.addClass("player-active");
+	addActiveClass: function(elementArray) {
+		elementArray.forEach(function(element, index, arr) {
+			element.addClass(activeClassName);
+		})
 	},
 
 	/**
-	 * Remove player-active class from container after player has finished their move
-	 * @param N/A
+	 * Remove player-active class from player 1 container after player 2 has selected his/her move
+	 * @param {array} elementArray Array of html dom objects
 	 * @return N/A
 	 */
-	removeActiveClass: function(htmlObj) {
-
+	removeActiveClass: function(elementArray) {
+		elementArray.forEach(function(element, index, arr) {
+			element.removeClass(activeClassName);
+		})
+		//htmlObj.removeClass(activeClassName);
 	},
 
 	/**
 	 * Generate html content for player choice selected display
-	 * @param N/A
+	 * @param {string} imgUrl Image source attribute for <img> tag
 	 * @return N/A
 	 */
-	createCurrMoveChoice: function() {
+	showMoveSelected: function(imgUrl,htmlObj) {
+		// Build choice selected html content. Add class "no-hover" so that the hover white bg is not initialized
+		var content =
+		'<div class="row">' +
+        	'<div class="col-sm-12 col-md-12 col-lg-12" id="answer-reveal">' +
+        		'<img class="no-hover-bg" src="' + imgUrl + '">' +
+        	'</div>' +
+        '</div>';
 
+        // Replace #player1 & #player2 div content with updated content
+        htmlObj.html(content);
 	},
 
 	/**
@@ -278,6 +305,28 @@ var game = {
 
 		// Reset snapshot action var back to default false so that normal gameplay actions may resume
 		cancelSnapshotAction = false;
+
+		// Restore game choice content and middle message feedback to original content, after delay of 5s
+		setTimeout(game.resetPlayContent, 5000);
+	},
+
+	/**
+	 * Reset the game content for the next R,P,S round (repopulate move icons and middle content feedback area)
+	 * @param N/A
+	 * @return N/A
+	 * Note: Executed inside of getBattleOutcome() function, in a setTimeout function 
+	 */
+	resetPlayContent: function() {
+		// Show all move choices again
+		game.showMoveChoices();
+
+		// Update middle feedback content
+		var msg = $('#round-feedback').data("text");
+		$('#round-feedback').text(msg);
+
+		// Set turnCount back to 1 so that player 1 can go (otherwise, will get an out-of-turn message)
+		turnCount = 1;
+		//$('#round-feedback').data("text").text();
 	},
 
 	/**
@@ -332,6 +381,9 @@ $(document).ready(function() {
 			game.showModal("There are already two active players! Somebody must leave first before adding a new player.");
 			return false;
 		}
+
+		// Clear the input text to make room for next player name input
+		$('input.player-join-input').val("");
 	});
 
 	// Create handler for player move click event
@@ -361,13 +413,8 @@ $(document).ready(function() {
 			// Increment turnCount so that system recongnizes 2nd player's turn
 			turnCount += 1;
 
-			// If playerNum == 1, update local play area content with move chosen display. Put in function 
-			var content = '<div class="row">' +
-        					'<div class="col-sm-12 col-md-12 col-lg-12" id="answer-reveal">' +
-        						'<img src="' + imgUrl + '">' +
-        					'</div>' +
-        				  '</div>';
-			$('div#player1').html(content).fadeIn(1300);
+			// Update player 1 play area content with move chosen display content
+			game.showMoveSelected(imgUrl, $('#player1'));
 
 			// Set turnCount with updated value
 			db.ref().child("turn").set(turnCount);
@@ -382,13 +429,8 @@ $(document).ready(function() {
 			// Increment turnCount so that it can be reset to 1
 			turnCount += 1;
 
-			// If playerNum == 1, update local play area content with move chosen display. Put in function 
-			var content = '<div class="row">' +
-        					'<div class="col-sm-12 col-md-12 col-lg-12" id="answer-reveal">' +
-        						'<img src="' + imgUrl + '">' +
-        					'</div>' +
-        				  '</div>';
-			$('div#player2').html(content).fadeIn(1300);
+			// Update player 1 play area content with move chosen display content
+			game.showMoveSelected(imgUrl, $('#player2'));
 
 			// Set turnCount with updated value
 			db.ref().child("turn").set(turnCount);
@@ -399,7 +441,13 @@ $(document).ready(function() {
 				imgUrl: imgUrl
 			});
 		}
-		// Note: don't do anything if turnCount == 3?
 	});
+
+	// Allow user to enter their player name via the "Enter" key
+ 	$('input.player-join-input').keypress(function(e) {
+        if (e.which == 13) {
+            $("span.plus-icon").click();
+        }
+    });
 });
     
