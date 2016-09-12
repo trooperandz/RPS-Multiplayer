@@ -29,6 +29,9 @@ var player2Losses = 0;
 var player1Name = "";
 var player2Name = "";
 
+// Set global for storing player's play number.  Used for restricting clicks on other player's move choice container
+var myPlayerNumber = 0;
+
 // Set global class name for player-active styling instruction
 var activeClassName = "player-active";
 
@@ -128,6 +131,16 @@ var game = {
 	rockImgSrc: "assets/img/rock.png",
 	paperImgSrc: "assets/img/paper.png",
 	scissorsImgSrc: "assets/img/scissors.png",
+
+	/**
+	 * Activate the <audio> tag with specified id param for game sound gameplay user feedback
+	 * @param {string} id HTML element id
+	 * @return N/A
+	 */
+	playGameNoise: function(id) {
+		var audio = document.getElementById(id);
+		audio.play();
+	},
 
 	/**
 	 * Generate html content for player move selection choices display
@@ -300,6 +313,9 @@ var game = {
 
 		}
 
+		// Play the battle decided noise
+		game.playGameNoise("battle-decided-sound");
+
 		// Update middle content area with winner message
 		$('#round-feedback').html(winMsg);
 
@@ -326,7 +342,9 @@ var game = {
 
 		// Set turnCount back to 1 so that player 1 can go (otherwise, will get an out-of-turn message)
 		turnCount = 1;
-		//$('#round-feedback').data("text").text();
+		
+		// Play the next move alert noise
+		game.playGameNoise("next-move-sound");
 	},
 
 	/**
@@ -340,6 +358,9 @@ var game = {
 
 		// Show the modal
 		$('.infoModal').modal("show");
+
+		// Play the modal alert noise
+		game.playGameNoise("modal-alert-sound");
 	}
 }
 
@@ -357,8 +378,19 @@ $(document).ready(function() {
 		}
 
 		// Check the state of player1Name and player2Name
-		if(player1Name == "") {
+		// Note: activate the below line if you want to disallow remote player from entering their opponent's name
+		//if(player1Name == "" && myPlayerNumber == 0) {
+		if (player1Name == "") {
+
+			// Play the player joined noise
+			game.playGameNoise("player-join-noise");
+
 			player1Name = name;
+
+			// Set player's number (unique to their computer).  Will dictate click rights
+			myPlayerNumber = 1;
+
+			// Insert player info into db
 			db.ref().set({
 				players: {
 					1: {
@@ -368,8 +400,19 @@ $(document).ready(function() {
 					}
 				}
 			});
+		// Note: activate the below line if you want to disallow remote player from entering their opponent's name
+		//} else if (player1Name != "" && player2Name == "" && myPlayerNumber == 0) {
 		} else if (player1Name != "" && player2Name == "") {
+
+			// Play the player joined noise
+			game.playGameNoise("player-join-noise");
+
 			player2Name = name;
+
+			// Set player's number (unique to their computer).  Will dictate click rights
+			myPlayerNumber = 2;
+
+			// Insert player info into db
 			db.ref().child("players").child("2").set({
 				losses: 0,
 				name: name,
@@ -388,6 +431,9 @@ $(document).ready(function() {
 
 	// Create handler for player move click event
 	$('.play-icons').on('click', 'img', function(e) {
+
+		// Play the move selection click noise
+		game.playGameNoise("click-noise");
 
 		// Get the player value. Actual player number will be the last 'letter' of the id string.
 		var playerNum = $(this).closest('div.play-icons').attr("id");
@@ -408,7 +454,9 @@ $(document).ready(function() {
 		var imgUrl = $(this).attr("src");
 		//console.log("imgUrl: " + imgUrl);
 
-		// If it is player 1's move, just update "turn" and "choice"
+		// If it is player 1's move, just update "turn", "choice" & "imgUrl"
+		// Note: activate the below line if you want to disallow remote computer player from selecting their opponent's move choice
+		//if(turnCount == 1 && myPlayerNumber == 1) {
 		if(turnCount == 1) {
 			// Increment turnCount so that system recongnizes 2nd player's turn
 			turnCount += 1;
@@ -424,7 +472,9 @@ $(document).ready(function() {
 				choice: move,
 				imgUrl: imgUrl
 			});
-
+		// If it is player 2's move, just update "turn", "choice" & "imgUrl"
+		// Note: activate the below line if you want to disallow remote computer player from selecting their opponent's move choice
+		//} else if (turnCount == 2 && myPlayerNumber == 2) {
 		} else if (turnCount == 2) {
 			// Increment turnCount so that it can be reset to 1
 			turnCount += 1;
@@ -440,7 +490,11 @@ $(document).ready(function() {
 				choice: move,
 				imgUrl: imgUrl
 			});
-		}
+		} 
+		/* Note: activate this else block if you chose to prevent a remote player from from selecting their opponent's move choice
+		else {
+			game.showModal("Sorry, but you just tried an illegal move, man!");
+		}*/
 	});
 
 	// Allow user to enter their player name via the "Enter" key
