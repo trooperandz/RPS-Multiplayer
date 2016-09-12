@@ -121,23 +121,9 @@ db.ref().on("value", function(snapshot) {
 
 	// If snapshot.val() == null, fill in game defaults (names & scores)
 	if (snapshot.val() == null) {
-		// Restore main name headings in gameplay and sidebar area
-		/*
-		var name1 = $('#player1Name').data("default");
-		var name2 = $('#player2Name').data("default");
-		$('#player1Name').text(name1);
-		$('#player2Name').text(name2);
-		$('.player1-side-h').text(name1);
-		$('.player2-side-h').text(name2);
-
-		// Restore all scores to zero
-		var scoreDefault = 0;
-		$('#player1-win-count').text(scoreDefault);
-		$('#player1-loss-count').text(scoreDefault);
-		$('#player2-win-count').text(scoreDefault);
-		$('#player2-loss-count').text(scoreDefault);
-		*/
+		// Erase db data, restore main name headings in gameplay and sidebar area, and set all scores back to zero
 		game.resetGame();
+		
 		// Remove active class from player 1 area
 		var elementArray = [ $('#player1Name'), $('#player1') ];
 		game.removeActiveClass(elementArray);
