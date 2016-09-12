@@ -119,6 +119,30 @@ db.ref().on("value", function(snapshot) {
 		document.getElementById("player2-loss-count").innerHTML = player2Losses;
 	}
 
+	// If snapshot.val() == null, fill in game defaults (names & scores)
+	if (snapshot.val() == null) {
+		// Restore main name headings in gameplay and sidebar area
+		/*
+		var name1 = $('#player1Name').data("default");
+		var name2 = $('#player2Name').data("default");
+		$('#player1Name').text(name1);
+		$('#player2Name').text(name2);
+		$('.player1-side-h').text(name1);
+		$('.player2-side-h').text(name2);
+
+		// Restore all scores to zero
+		var scoreDefault = 0;
+		$('#player1-win-count').text(scoreDefault);
+		$('#player1-loss-count').text(scoreDefault);
+		$('#player2-win-count').text(scoreDefault);
+		$('#player2-loss-count').text(scoreDefault);
+		*/
+		game.resetGame();
+		// Remove active class from player 1 area
+		var elementArray = [ $('#player1Name'), $('#player1') ];
+		game.removeActiveClass(elementArray);
+	}
+
 // If any errors are experienced, log them to console. 
 }, function (errorObject) {
   	console.log("The read failed: " + errorObject.code);
@@ -348,6 +372,32 @@ var game = {
 	},
 
 	/**
+	 * Reset the game: remove db content, and restore player names and scores to defaults
+	 * @param N/A
+	 * @return N/A
+	 */
+	resetGame: function() {
+		// Erase db info
+		db.ref().remove();
+
+		// Restore all name headings to defaults
+		var name1 = $('#player1Name').data("default");
+		var name2 = $('#player2Name').data("default");
+		$('#player1Name').text(name1);
+		$('#player2Name').text(name2);
+		$('.player1-side-h').text(name1);
+		$('.player2-side-h').text(name2);
+
+		
+		// Restore all scores to zero
+		var scoreDefault = 0;
+		$('#player1-win-count').text(scoreDefault);
+		$('#player1-loss-count').text(scoreDefault);
+		$('#player2-win-count').text(scoreDefault);
+		$('#player2-loss-count').text(scoreDefault);
+	},
+
+	/**
 	 * Show modal for alert information
 	 * @param {string} msg Message to be displayed
 	 * @return N/A
@@ -497,11 +547,41 @@ $(document).ready(function() {
 		}*/
 	});
 
+	// Click handler for reset game button, to erase db data and restore game defaults
+	// 1) Erase db info, set cancelSpanshotAction == true
+	// 2) Run resetPlayContent method to restore all player choice options on the screen
+	// 3) 
+	$('#reset-btn').on('click', function() {
+		db.ref().remove();
+	});
+
+	// Click handler for play/pause bg music control. Initialize default data state first (pause icon displayed initially)
+	var musicState = "glyphicon-pause";
+	$('#music-controls').on('click', function() {
+		if (musicState == "glyphicon-pause") {
+			// Pause the bg music
+			document.getElementById("bg-music").pause();
+			var icon = $(this).data("play");
+			$(this).removeClass(musicState);
+			$(this).addClass(icon);
+			// Reset musicState
+			musicState = "glyphicon-play-circle";
+		} else {
+			// Play the bg music
+			document.getElementById("bg-music").play();
+			var icon = $(this).data("pause");
+			$(this).removeClass(musicState);
+			$(this).addClass(icon);
+			// Reset musicState
+			musicState = "glyphicon-pause";
+		}
+
+	});
+
 	// Allow user to enter their player name via the "Enter" key
  	$('input.player-join-input').keypress(function(e) {
         if (e.which == 13) {
             $("span.plus-icon").click();
         }
     });
-});
-    
+}); 

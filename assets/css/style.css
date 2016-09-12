@@ -103,6 +103,10 @@ h1.page-header {
 	margin-bottom: 5px;
 }
 
+#music-controls {
+	cursor: pointer;
+}
+
 div#player-content h2 {
 	font-weight: 200;
 	margin-bottom: 20px;
@@ -178,9 +182,20 @@ div#result-content p {
 	box-shadow: 7px 7px 9px #323232;
 }
 
-/* Only add sidebar border on larger screens */
+/* Specific styling for larger screens */
 @media (min-width: 768px) {
+	/* Only add a right border on larger screens, to give sidebar better aesthetics */
 	.sidebar {
 		border-right: 1px solid gray;
+	}
+
+	/* Allow the reset game button to stay inline with the bg music heading/play controls */
+	#bg-music-info {
+		float: left;
+	}
+
+	/* Right-align the reset game button on larger screens */
+	p.reset-btn-container {
+		text-align: right;
 	}
 }

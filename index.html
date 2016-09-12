@@ -72,7 +72,7 @@
             <!-- Main program nav display -->
             <div id="navbar" class="navbar-collapse collapse">
                 <div class="navbar-form navbar-right">
-                    <button class="btn btn-primary clear-btn">Leave Game</button>
+                    <!--<button class="btn btn-primary clear-btn">Leave Game</button>-->
                     <label> Join Game </label>
                     <!-- Input field for new topic button generation -->
                     <input type="text" class="form-control input-generate player-join-input" placeholder="Enter your name...">
@@ -112,20 +112,24 @@
                     		</p>
                     		<img src="assets/img/player-icon.png" alt="Player Image">
                     	</li>
-                    </div>
-                </ul>
-            </div>
+                    </div> <!-- #player-area -->
+                </ul> <!-- .nav-sidebar -->
+            </div> <!-- .sidebar -->
             <!-- Main gif content container -->
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
                 <h1 class="page-header"> Choose Your Move Wisely... <span class="header-span"></span></h1>
-                <!-- <h5>Some Info</h5> -->
+                <!-- Background music play controls (just play/pause). Swap out data in class for play/pause action -->
+                <p id="bg-music-info">Awesome Music: 
+                    <a><span class="glyphicon glyphicon-pause" id="music-controls" data-play="glyphicon-play-circle" data-pause="glyphicon-pause"></span></a>
+                </p>
+                <p class="reset-btn-container"><button class="btn btn-warning" id="reset-btn">Reset Game</button></p>
                 <div class="row" id="game-content">
                 	<!-- Make R,P,S choice icons look like an evenly-spaced circular layout -->
                 	<div class="col-sm-12 col-md-4 col-lg-4 text-center" id="player-content">
                 		<div class="row">
                 			<div class="col-sm-12 col-md-12 col-lg-12">
                 				<!--<h2 class="player-active" id="player1Name"> Player 1 </h2>-->
-                				<h2 id="player1Name"> Player 1 </h2>
+                				<h2 id="player1Name" data-default="Player 1"> Player 1 </h2>
                 			</div>
                 		</div>
                 		<!-- Note: id "player1" used to target db player reference. <img> id's used to identify move type -->
@@ -143,8 +147,8 @@
                 					<img src="assets/img/scissors.png" class="img-2" id="scissors">
                 				</div>
                 			</div>
-                		</div>
-                	</div>
+                		</div> <!-- #player1 -->
+                	</div> <!-- #player-content -->
 
                 	<div class="col-sm-12 col-md-4 col-lg-4 text-center" id="result-content">
                 		<div class="row">
@@ -157,13 +161,13 @@
                 				<p id="round-feedback" data-text="Waiting..."> Waiting... </p>
                 			</div>
                 		</div>
-                	</div>
+                	</div> <!-- #result-content -->
 
                 	<!-- Make R,P,S choices look like a circle layout -->
                 	<div class="col-sm-12 col-md-4 col-lg-4 text-center" id="player-content">
                 		<div class="row">
                 			<div class="col-sm-12 col-md-12 col-lg-12">
-                				<h2 id="player2Name"> Player 2 </h2>
+                				<h2 id="player2Name" data-default="Player 2"> Player 2 </h2>
                 			</div>
                 		</div>
                 		<!-- Note: id "player2" used to target db player reference. <img> id's used to identify move type -->
@@ -180,12 +184,12 @@
                 					<img src="assets/img/scissors.png" class="img-2" id="scissors">
                 				</div>
                 			</div>
-                		</div>
-                	</div>
-                </div>
-            </div> <!-- /.main -->
-        </div> <!-- /.row -->
-    </div> <!-- /.container-fluid -->
+                		</div> <!-- #player2 -->
+                	</div> <!-- #player-content -->
+                </div> <!-- .game-content -->
+            </div> <!-- .main -->
+        </div> <!-- .row -->
+    </div> <!-- .container-fluid -->
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
