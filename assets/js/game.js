@@ -32,6 +32,10 @@ var player2Name = "";
 // Set global for storing player's play number.  Used for restricting clicks on other player's move choice container
 var myPlayerNumber = 0;
 
+// Set global for storing player's name.  Used for showing player's name along with their message in the chat window. Stored locally on client.
+// Note: Not being used yet.  Haven't figured out what to do with this, & how to set name if player reloads their page...
+var myPlayerName = "";
+
 // Set global class name for player-active styling instruction
 var activeClassName = "player-active";
 
@@ -117,6 +121,11 @@ db.ref().on("value", function(snapshot) {
 		// Update player win/loss stats. Note: getBattleResults in snapshot sets globals for you
 		document.getElementById("player2-win-count").innerHTML = player2Wins;
 		document.getElementById("player2-loss-count").innerHTML = player2Losses;
+	}
+
+	// Update chat window with most recent chat message
+	if (snapshot.child("chat").exists()) {
+		$('#chat-textarea').append(snapshot.val().chat + "\n");
 	}
 
 	// If snapshot.val() == null, fill in game defaults (names & scores)
@@ -381,6 +390,9 @@ var game = {
 		$('#player1-loss-count').text(scoreDefault);
 		$('#player2-win-count').text(scoreDefault);
 		$('#player2-loss-count').text(scoreDefault);
+
+		// Clear out the chat text input after it is submitted
+		$('#chat-input').val("");
 	},
 
 	/**
@@ -423,6 +435,8 @@ $(document).ready(function() {
 
 			player1Name = name;
 
+			myPlayerName = name;
+
 			// Set player's number (unique to their computer).  Will dictate click rights
 			myPlayerNumber = 1;
 
@@ -444,6 +458,8 @@ $(document).ready(function() {
 			game.playGameNoise("player-join-noise");
 
 			player2Name = name;
+
+			myPlayerName = name;
 
 			// Set player's number (unique to their computer).  Will dictate click rights
 			myPlayerNumber = 2;
@@ -538,6 +554,29 @@ $(document).ready(function() {
 		db.ref().remove();
 	});
 
+	// Click handler for chat input
+	$('.share-icon').on('click', function() {
+		var text = $('#chat-input').val().trim();
+		console.log("Chat text: " + text);
+
+		// If there is nothing entered, do not submit message
+		if (text == "") {
+			game.showModal("You didn't enter a message!");
+			return false;
+		}
+
+		// Add player's name to their text message, for display in chat window
+		text = myPlayerName + ": " + text;
+
+		// Clear out the chat text input after it is submitted
+		$('#chat-input').val("");
+
+		db.ref().update({
+			chat: text
+		});
+
+	});
+
 	// Click handler for play/pause bg music control. Initialize default data state first (pause icon displayed initially)
 	var musicState = "glyphicon-pause";
 	$('#music-controls').on('click', function() {
@@ -565,6 +604,13 @@ $(document).ready(function() {
  	$('input.player-join-input').keypress(function(e) {
         if (e.which == 13) {
             $("span.plus-icon").click();
+        }
+    });
+
+    // Allow user to enter their chat message via the "Enter" key
+ 	$('input#chat-input').keypress(function(e) {
+        if (e.which == 13) {
+            $("span.share-icon").click();
         }
     });
 }); 

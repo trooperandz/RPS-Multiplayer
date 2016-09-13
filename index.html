@@ -68,6 +68,7 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="#">Rock, Paper, Scissors!</a>
+                <button class="btn btn-warning" id="reset-btn">Reset Game</button>
             </div>
             <!-- Main program nav display -->
             <div id="navbar" class="navbar-collapse collapse">
@@ -120,11 +121,17 @@
             <!-- Main gif content container -->
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
                 <h1 class="page-header"> Choose Your Move Wisely... <span class="header-span"></span></h1>
+                <div class="form-inline chat-container">
+                    <label> Chat Here: </label>
+                    <input type="text" class="form-control" id="chat-input" placeholder="Words of wisdom...">
+                    <!-- Search icon, registers click for new topic button generation, or via onkeyup Enter kay -->
+                    <span class="glyphicon glyphicon-share-alt share-icon" aria-hidden="true"></span>
+                </div>
                 <!-- Background music play controls (just play/pause). Swap out data in class for play/pause action -->
-                <p id="bg-music-info">Awesome Music: 
+                <p id="bg-music-info"> <span class="glyphicon glyphicon-headphones"></span> Incoherent Blues: 
                     <a><span class="glyphicon glyphicon-pause" id="music-controls" data-play="glyphicon-play-circle" data-pause="glyphicon-pause"></span></a>
                 </p>
-                <p class="reset-btn-container"><button class="btn btn-warning" id="reset-btn">Reset Game</button></p>
+                <!-- Note: .match-my-cols forces row to be equal height accross each container -->
                 <div class="row" id="game-content">
                 	<!-- Make R,P,S choice icons look like an evenly-spaced circular layout -->
                 	<div class="col-sm-12 col-md-4 col-lg-4 text-center" id="player-content">
@@ -161,6 +168,7 @@
                 		<div class="row">
                 			<div class="col-sm-12 col-md-12 col-lg-12 text-center">
                 				<p id="round-feedback" data-text="Waiting..."> Waiting... </p>
+                                <textarea class="form-control" id="chat-textarea" placeholder="This is the home for insults..."></textarea>
                 			</div>
                 		</div>
                 	</div> <!-- #result-content -->
