@@ -63,13 +63,18 @@ var dbObj = {
 			if(snapshot.val() != null) {
 				$('#chat-textarea').append(snapshot.val() + "\n");
 			}
-			console.log("The chat value function ran! snapshot = " , snapshot.val());
+			//console.log("The chat value function ran! snapshot = " , snapshot.val());
 		});
 	},
 
 	// This works
 	getPlayers: function() {
 		this.playersRef.on('value', function(snapshot) {
+			// Set player default names so that if data is erased in db, names will update with default name.
+			// DO NOT set player1Name or player2Name globals to default string, as further logic depends on these null values for entering names into db as players join
+			var player1NameDefault = "Player 1";
+			var player2NameDefault = "Player 2";
+
 			// Check to see if players exist. If so, set player1 and player2 names
 			player1Exists = snapshot.child('1').exists();
 			player2Exists = snapshot.child('2').exists();
@@ -81,13 +86,39 @@ var dbObj = {
 				player1Wins   = player1Data.wins;
 				player1Losses = player1Data.losses;
 
-				// Update side content and main content player name
-				$('.player1-side-h').html(player1Name);
-				$('#player1Name').html(player1Name);
+				// Update side content and main content html with most up-to-date player name
+				game.updatePlayerName({
+					htmlSideObj: $('.player1-side-h'),
+					htmlMainObj: $('#player1Name'),
+					playerName:  player1Name
+				});
 
-				// Update player win/loss stats. Note: getBattleResults in snapshot sets globals for you
-				document.getElementById("player1-win-count").innerHTML = player1Wins;
-				document.getElementById("player1-loss-count").innerHTML = player1Losses;
+				// Update player win/loss with most up-to-date stats. Note: getBattleResults in snapshot sets globals for you
+				game.updatePlayerScore ({
+					htmlWinObj: $('#player1-win-count'),
+					htmlLossObj: $('#player1-loss-count'),
+					winCount: player1Wins,
+					lossCount: player1Losses
+				});
+				
+			} else {
+				// Set name global back to null, so that modal ("There are already two players!") does not fire, and new name may be inserted
+				player1Name = "";
+
+				// Update side content and main content html with most up-to-date player name
+				game.updatePlayerName({
+					htmlSideObj: $('.player1-side-h'),
+					htmlMainObj: $('#player1Name'),
+					playerName:  player1NameDefault
+				});
+
+				// Update player win/loss with most up-to-date stats. Note: getBattleResults in snapshot sets globals for you
+				game.updatePlayerScore ({
+					htmlWinObj: $('#player1-win-count'),
+					htmlLossObj: $('#player1-loss-count'),
+					winCount: player1Wins,
+					lossCount: player1Losses
+				});
 			}
 
 			// If player 2 exists, set player2 name
@@ -97,14 +128,41 @@ var dbObj = {
 				player2Wins   = player2Data.wins;
 				player2Losses = player2Data.losses;
 
-				// Update side content and main content player name
-				$('.player2-side-h').html(player2Name);
-				$('#player2Name').html(player2Name);
+				// Update side content and main content html with most up-to-date player name
+				game.updatePlayerName({
+					htmlSideObj: $('.player2-side-h'),
+					htmlMainObj: $('#player2Name'),
+					playerName:  player2Name
+				});
 
-				// Update player win/loss stats. Note: getBattleResults in snapshot sets globals for you
-				document.getElementById("player2-win-count").innerHTML = player2Wins;
-				document.getElementById("player2-loss-count").innerHTML = player2Losses;
+				// Update player win/loss with most up-to-date stats. Note: getBattleResults in snapshot sets globals for you
+				game.updatePlayerScore ({
+					htmlWinObj: $('#player2-win-count'),
+					htmlLossObj: $('#player2-loss-count'),
+					winCount: player2Wins,
+					lossCount: player2Losses
+				});
+
+			} else {
+				// Set name global back to null, so that modal ("There are already two players!") does not fire, and new name may be inserted
+				player2Name = "";
+
+				// Update side content and main content html with most up-to-date player name
+				game.updatePlayerName({
+					htmlSideObj: $('.player2-side-h'),
+					htmlMainObj: $('#player2Name'),
+					playerName:  player2NameDefault
+				});
+
+				// Update player win/loss with most up-to-date stats. Note: getBattleResults in snapshot sets globals for you
+				game.updatePlayerScore ({
+					htmlWinObj: $('#player2-win-count'),
+					htmlLossObj: $('#player2-loss-count'),
+					winCount: player2Wins,
+					lossCount: player2Losses
+				});
 			}
+
 			console.log("turnCount inside of getPlayers(): " + turnCount);
 			// If turnCount == 1 (player 1's turn), add active class to content for styling
 			if(turnCount == 0 || turnCount == 1) {
@@ -131,7 +189,7 @@ var dbObj = {
 				var imgUrl1 = player1Data.imgUrl;
 				//console.log("Player 1 snapshot img test turnCount 3: " + imgUrl1);
 	
-				 var player1Choice = player1Data.choice;
+				var player1Choice = player1Data.choice;
 				// console.log("Player 1 snapshot choice test turnCount 3: " + choiceTest);
 	
 				// Replace choice content with player-selected move
@@ -146,31 +204,35 @@ var dbObj = {
 				// Replace choice content with player-selected move
 				game.showMoveSelected(imgUrl2, $('#player2'));
 
-				// Reset turn node in db back to 1
+				// Reset turn node in db back to 1, only after loss count has also been updated
 				dbObj.turnRef.set(1);
 				
 				// Determine who won, display middle feedback msg, update win/loss count, and then reset answer choice and middle feedback content to default
 				game.getBattleOutcome(player1Choice, player2Choice);
 			}
 
-			console.log("The players value function ran: snapshot = " , snapshot.val());
-			console.log("player1Exists: " + player1Exists + "\n player1Name: " + player1Name);
-			console.log("player2Exists: " + player2Exists + "\n player2Name: " + player2Name);
+			console.log("The players snapshot function ran: snapshot = " , snapshot.val());
+			//console.log("player1Exists: " + player1Exists + "\n player1Name: " + player1Name);
+			//console.log("player2Exists: " + player2Exists + "\n player2Name: " + player2Name);
 		});
 	},
 
-	//
+	// This works
 	getTurn: function() {
 		this.turnRef.on('value', function(snapshot) {
 			turnCount = snapshot.val();
-			console.log("The turn value function ran: snapshot = " , snapshot.val());
+			//console.log("The turn value function ran: snapshot = " , snapshot.val());
 		});
 	}
 }
 
-// Activate event listener for added chat messages. Will only fire and append new chat message when the 'chat' child changes
+// Activate event listener for database chat node
 dbObj.getChat();
+
+// Activate event listener for database turn node
 dbObj.getTurn();
+
+// Activate event listener for database players node
 dbObj.getPlayers();
 
 
@@ -299,6 +361,28 @@ var game = {
 	},
 
 	/**
+	 * Update player name html, when new name is inserted, or existing name is removed
+	 * @param {string} playerName Player name string update
+	 * @return N/A
+	 */
+	updatePlayerName: function(dataObj) {
+		// Update side content and main content html with most up-to-date player name
+		$(dataObj.htmlSideObj).html(dataObj.playerName);
+		$(dataObj.htmlMainObj).html(dataObj.playerName);
+	},
+
+	/**
+	 * Update player win/loss html, when battle outcome is decided, or existing data is removed from db
+	 * @param {object} dataObj Object containing: 'htmlWinObj,', 'htmlLossObj', 'winCount', 'lossCount'
+	 * @return N/A
+	 */
+	updatePlayerScore: function(dataObj) {
+		// Update player win/loss stats. Note: getBattleResults in snapshot sets globals for you
+		dataObj.htmlWinObj.text(dataObj.winCount);
+		dataObj.htmlLossObj.text(dataObj.lossCount);
+	},
+
+	/**
 	 * Generate html content for player move selection choices display
 	 * @param N/A
 	 * @return N/A
@@ -376,7 +460,7 @@ var game = {
 	 * Updates to global vars player1Wins, player1Losses, player2Wins, player2Losses occurr in code
 	 */
 	getBattleOutcome: function(player1Choice, player2Choice) {
-
+		console.log("getBattleOutcome fun ran!");
 		// Establish & assign boolean values to winner vars for easy readability
 		var player1 = true;
 		var player2 = false;
@@ -439,11 +523,11 @@ var game = {
 		var winMsg = "";
 
 		if (gameResult == "tie") {
-			console.log("Tied game!");
+			//console.log("Tied game!");
 			winMsg = "'Twas a tie!";
 
 		} else if (gameResult) {
-			console.log("Player 1 won!");
+			//console.log("Player 1 won!");
 			// Player 1 won. Update player 1 win and player 2 loss count in db
 			// Note: when these 2 separate db instructions for updating wins and losses in db, if never executes the second loss update. Why?
 
@@ -505,6 +589,7 @@ var game = {
 	 * Note: Executed inside of getBattleOutcome() function, in a setTimeout function 
 	 */
 	resetPlayContent: function() {
+		console.log("resetPlayContent fun ran!");
 		// Show all move choices again
 		game.showMoveChoices();
 
